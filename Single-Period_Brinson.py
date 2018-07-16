@@ -10,6 +10,8 @@ import os,pymssql
 import re
 import math
 
+#链接恒生聚源数据库
+
 def get_data(sql1):
     server="xxx.xxx.xxx.xx"
     user="xx"
