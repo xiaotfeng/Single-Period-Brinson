@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-#import pyodbc
 import datetime
 import datetime
 import dateutil
@@ -225,10 +224,10 @@ Q['Q2'] = Q['BenRtn_Prod'] * Q['HldWeight']
 Q['Q3'] = Q['HldRtn_Prod'] * Q['BenWeight']
 #4.组合收益组合权重
 Q['Q4'] = Q['HldRtn_Prod'] * Q['HldWeight']
-Q['行业配置'] = Q['Q2'] - Q['Q1']
-Q['个股选择'] = Q['Q3'] - Q['Q1']
-Q['交互收益'] = Q['Q4'] - Q['Q3'] - Q['Q2'] + Q['Q1']
-Q['总超额收益'] = Q['Q4'] - Q['Q1']
+Q['AR'] = Q['Q2'] - Q['Q1']
+Q['SR'] = Q['Q3'] - Q['Q1']
+Q['IR'] = Q['Q4'] - Q['Q3'] - Q['Q2'] + Q['Q1']
+Q['TR'] = Q['Q4'] - Q['Q1']
 Q['FundCode']=hld_data2['FundCode']
-Q_Result=Q[['Q1','Q2','Q3','Q4','行业配置','个股选择','交互收益','总超额收益']]
+Q_Result=Q[['Q1','Q2','Q3','Q4','AR','SR','IR','TR']]
 Q_Result=Q_Result.apply(lambda x: x.sum())
