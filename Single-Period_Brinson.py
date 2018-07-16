@@ -1,3 +1,5 @@
+
+
 import pandas as pd
 import numpy as np
 import datetime
@@ -12,15 +14,15 @@ import math
 #链接恒生聚源数据库
 
 def get_data(sql1):
-    server="xxx.xxx.xxx.xx"
-    user="xx"
-    password="xxx"
-    conn=pymssql.connect(server,user,password,database="xxxx",charset='utf8')
-    cursor=conn.cursor()
+    server = "xxx.xxx.xxx.xx"
+    user = "xx"
+    password = "xxx"
+    conn = pymssql.connect(server,user,password,database="xxxx",charset='utf8')
+    cursor = conn.cursor()
     cursor.execute(sql1)
-    row=cursor.fetchall()
+    row = cursor.fetchall()
     conn.close()
-    data =pd.DataFrame(row,columns=zip(*cursor.description)[0])
+    data = pd.DataFrame(row,columns=zip(*cursor.description)[0])
     data = l2gbyR(data)
     return data
     
@@ -31,18 +33,18 @@ def get_last_season_enddate(latest_date):
     month=latest_date.month
     
     if month in [3,6]:
-        day='31'
+        day = '31'
     else:
-        day='30'
+        day = '30'
         
-    if month==3:
-        year=str(year-1)
-        month=str(12)
+    if month == 3:
+        year = str(year-1)
+        month = str(12)
     else:
-        year=str(year)
-        month='0'+str(month-3)
+        year = str(year)
+        month = '0'+str(month-3)
         
-    last_season_end_date="'"+year+'-'+month+'-'+day+"'"
+    last_season_end_date = "'"+year+'-'+month+'-'+day+"'"
     
     return last_season_end_date
     
