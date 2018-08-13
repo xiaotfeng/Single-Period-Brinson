@@ -204,6 +204,7 @@ hld_data2['Weight']=hld_data2['MarketValue']/sum(hld_data2['MarketValue'])*100
 hld_data2['Weight']=hld_data2['Weight'].apply(lambda x: '%.3f' %x).apply(lambda s: float(s))
 hld_data2['log_return']=hld_data2['log_return'].apply(lambda s: float(s))
 hld_data2['HldRtn_Prod']=hld_data2['log_return']*hld_data2['Weight']
+
 benchmark_data2['Weight_Adjusted']=benchmark_data2['Weight']/sum(benchmark_data2['Weight'])*100
 benchmark_data2['Weight_Adjusted']=benchmark_data2['Weight_Adjusted'].apply(lambda x: '%.3f' %x).apply(lambda s: float(s))
 benchmark_data2['log_return']=benchmark_data2['log_return'].apply(lambda s: float(s))
@@ -212,20 +213,28 @@ benchmark=benchmark_data2[['FstIndNameCSRS','BenRtn_Prod','Weight_Adjusted']].gr
 hld=hld_data2[['FstIndNameCSRS','HldRtn_Prod','Weight']].groupby(['FstIndNameCSRS']).sum().reset_index()
 hld=hld.rename(columns={'Weight':'HldWeight'})
 benchmark=benchmark.rename(columns={'Weight_Adjusted':'BenWeight'})
+
+hld['HldRtn']=hld['HldRtn_Prod']/hld['HldWeight']
+del hld['HldRtn_Prod']
+
+
+benchmark['BenRtn']=hld['BenRtn_Prod']/hld['BenWeight']
+del benchmark['HldRtn_Prod']
+
 Q=pd.merge(hld,benchmark,on='FstIndNameCSRS',how='outer')
-Q.fillna(0)
+Q=Q.fillna(0)
 
 
 Q['HldWeight']=Q['HldWeight']/100
 Q['BenWeight']=Q['BenWeight']/100
 #1.基准收益基准权重
-Q['Q1'] = Q['BenRtn_Prod'] * Q['BenWeight']
+Q['Q1'] = Q['BenRtn'] * Q['BenWeight']
 #2.基准收益组合权重
-Q['Q2'] = Q['BenRtn_Prod'] * Q['HldWeight']
+Q['Q2'] = Q['BenRtn'] * Q['HldWeight']
 #3.基准权重组合收益
-Q['Q3'] = Q['HldRtn_Prod'] * Q['BenWeight']
+Q['Q3'] = Q['HldRtn'] * Q['BenWeight']
 #4.组合收益组合权重
-Q['Q4'] = Q['HldRtn_Prod'] * Q['HldWeight']
+Q['Q4'] = Q['HldRtn'] * Q['HldWeight']
 Q['AR'] = Q['Q2'] - Q['Q1']
 Q['SR'] = Q['Q3'] - Q['Q1']
 Q['IR'] = Q['Q4'] - Q['Q3'] - Q['Q2'] + Q['Q1']
